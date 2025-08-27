@@ -1,4 +1,4 @@
-export function TodoCards () {
+export function TodoCard () {
     return ( 
     <div></div>
     )

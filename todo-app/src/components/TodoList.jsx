@@ -1,9 +1,9 @@
-import { TodoCards } from "./TodoCard";
+import { TodoCard } from "./TodoCard";
 
 export function TodoList() {
     return (
         <div>
-            <TodoCards/>
+            <TodoCard/>
         </div>
     )
 }
