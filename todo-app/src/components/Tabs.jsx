@@ -1,12 +1,21 @@
-export function Tabs() {
+export function Tabs(props) {
+    const { todos } = props
+
     const tabs = ['All', 'Open', 'Completed']
-    return ( 
+    return (
         <nav className="tab-container">
-            
+
             {tabs.map((tab, tabIndex) => {
+                const statusOfTask = tab === 'All' ? todos.length :
+                    tab === 'Open' ? todos.filter((val) => !val.complete).length :
+                        todos.filter((val) => val.complete).length
+
+
                 return (
+
+
                     <button key={tabIndex} className="tab-button">
-                        <h4>{tab} <span>(0)</span></h4>
+                        <h4>{tab} <span>({statusOfTask})</span></h4>
                     </button>
                 )
             })}
