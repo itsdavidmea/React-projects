@@ -32,12 +32,19 @@ function App() {
     setTodos(newTodoList)
   }
 
-  function handleEditTodo() {
-
+  function handleCompleteTodo(index) {
+    let newTodoList = [...todos]
+    let completedTodo = todos[index]
+    completedTodo['complete'] = true // this is to access the 'complete' state of the object
+    newTodoList[index] = completedTodo
+    setTodos(newTodoList)
   }
 
-  function handleDeleteTodo() {
-
+  function handleDeleteTodo(index) {
+    let newTodoList = todos.filter((val, valIndex) => {
+      return valIndex !== index 
+    })
+    setTodos(newTodoList)
   }
   return (
     <>
@@ -48,7 +55,7 @@ function App() {
         setSelectedTab={setSelectedTab} // Function to update the selected tab when the user clicks a tab
       /> 
       <TodoInput todos={todos} handleAddTodo={handleAddTodo} />
-      <TodoList todos={todos} selectedTab={selectedTab}/>
+      <TodoList todos={todos} selectedTab={selectedTab} handleDeleteTodo={handleDeleteTodo} handleCompleteTodo={handleCompleteTodo}/>
     </>
   )
 
