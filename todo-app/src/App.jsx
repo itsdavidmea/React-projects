@@ -48,7 +48,7 @@ function App() {
         setSelectedTab={setSelectedTab} // Function to update the selected tab when the user clicks a tab
       /> 
       <TodoInput todos={todos} handleAddTodo={handleAddTodo} />
-      <TodoList todos={todos} />
+      <TodoList todos={todos} selectedTab={selectedTab}/>
     </>
   )
 
