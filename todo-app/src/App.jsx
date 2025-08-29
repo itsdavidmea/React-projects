@@ -23,7 +23,7 @@ function App() {
     <>
       <Header todos={todos}/>
       <Tabs  todos={todos}/>
-      <TodoCard  todos={todos}/>
+     
       <TodoInput  todos={todos}/>
       <TodoList  todos={todos}/>
     </>
