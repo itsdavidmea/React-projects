@@ -10,6 +10,7 @@ export function TodoCard(props) {
                 <button disabled={todo.complete}
 
                     onClick={() => {
+                        console.log(todoIndex)
                         handleCompleteTodo(todoIndex)
                     }}
 
