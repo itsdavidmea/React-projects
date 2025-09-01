@@ -3,6 +3,8 @@
 This is a simple Todo application built with [React](https://react.dev/) and [Vite](https://vitejs.dev/).  
 It demonstrates core React concepts such as components, props, state management, and conditional rendering.
 
+link to project: https://davidstodoapps.netlify.app/
+
 ## Features
 
 - Add new todo items
