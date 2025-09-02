@@ -35,7 +35,7 @@ export function Login() {
     return (
         <div className="login-container">
             <div className="login-box">
-                <h2>Welcome Back</h2>
+                <h2>Welcome to David's Todo App</h2>
                 
                 {errorMessage && (
                     <div className="error-message">
@@ -80,7 +80,7 @@ export function Login() {
                         className="google-button"
                         disabled={isSigningIn}
                     >
-                        <img src={google_logo} alt="" />
+                        <img src={google_logo} alt="" className='google-icon'/>
                         Sign in with Google
                     </button>
                 </form>

@@ -14,6 +14,7 @@ import { TodoCard } from './components/TodoCard'
 import { TodoInput } from './components/TodoInput'
 import { TodoList } from './components/TodoList'
 import { Login } from './components/Auth/Login'
+import { SignOut } from './components/Auth/SignOut'
 
 
 
@@ -88,6 +89,7 @@ function AppContent({ todos, selectedTab, setSelectedTab, handleAddTodo, handleD
     <>
       {isLoggedIn ? (
         <>
+          <SignOut/>
           <Header todos={todos} />
           <Tabs
             todos={todos}
