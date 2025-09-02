@@ -1,6 +1,9 @@
 // App.jsx: Main React component for your application. Handles UI and state logic for the counter demo.
 import { useState, useEffect } from 'react'
 import { AuthProvider, useAuth } from './contexts/AuthContext' // Remove useAuth from here
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { Login } from './components/Auth/Login'
+import { Register } from './components/Auth/Register'
 
 
 import reactLogo from './assets/react.svg'
@@ -13,15 +16,11 @@ import { Tabs } from './components/Tabs'
 import { TodoCard } from './components/TodoCard'
 import { TodoInput } from './components/TodoInput'
 import { TodoList } from './components/TodoList'
-import { Login } from './components/Auth/Login'
 import { SignOut } from './components/Auth/SignOut'
 
 
 
 function App() {
-  // Remove this line as it won't work here
-  // const { isLoggedIn } = useAuth() 
-
   const [todos, setTodos] = useState([
     { input: 'Hello! Add your first todo!', complete: true }
   ])
@@ -67,17 +66,30 @@ function App() {
   }, [])
 
   return (
-    <AuthProvider>
-      
-      <AppContent 
-        todos={todos}
-        selectedTab={selectedTab}
-        setSelectedTab={setSelectedTab}
-        handleAddTodo={handleAddTodo}
-        handleDeleteTodo={handleDeleteTodo}
-        handleCompleteTodo={handleCompleteTodo}
-      />
-    </AuthProvider>
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/todos"
+            element={
+              <ProtectedRoute>
+                <AppContent 
+                  todos={todos}
+                  selectedTab={selectedTab}
+                  setSelectedTab={setSelectedTab}
+                  handleAddTodo={handleAddTodo}
+                  handleDeleteTodo={handleDeleteTodo}
+                  handleCompleteTodo={handleCompleteTodo}
+                />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
+    </Router>
   )
 }
 // we do it like this because authProvider context can only be used with its children 
@@ -110,6 +122,17 @@ function AppContent({ todos, selectedTab, setSelectedTab, handleAddTodo, handleD
       )}
     </>
   )
+}
+
+// Add this ProtectedRoute component
+function ProtectedRoute({ children }) {
+  const { isLoggedIn } = useAuth()
+  
+  if (!isLoggedIn) {
+      return <Navigate to="/login" />
+  }
+  
+  return children
 }
 
 export default App

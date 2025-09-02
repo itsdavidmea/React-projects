@@ -1,3 +1,4 @@
+import { Link, useNavigate } from 'react-router-dom' 
 import React, { useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../../auth'
@@ -6,7 +7,8 @@ import google_logo from '../../assets/google_logo.svg'
 
 
 export function Login() {
-    const { authUser, setAuthUser, isLoggedIn, setIsLoggedIn } = useAuth();
+    const navigate = useNavigate() // Add this hook
+    const { setAuthUser, setIsLoggedIn } = useAuth()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [isSigningIn, setIsSigningIn] = useState(false)
@@ -16,17 +18,33 @@ export function Login() {
         e.preventDefault()
         if (!isSigningIn) {
             setIsSigningIn(true)
-            await doSignInWithEmailAndPassword(email, password)
+            try {
+                const result = await doSignInWithEmailAndPassword(email, password)
+                setIsLoggedIn(true)
+                setAuthUser(result.user)
+                navigate('/todos') // Navigate to todos page after successful login
+            } catch (error) {
+                setErrorMessage(error.message)
+            } finally {
+                setIsSigningIn(false)
+            }
         }
     }
 
-    const onGoogleSignIn = (e) => {
+    const onGoogleSignIn = async (e) => {
         e.preventDefault()
         if (!isSigningIn) {
             setIsSigningIn(true)
-            doSignInWithGoogle().catch(err => {
+            try {
+                const result = await doSignInWithGoogle()
+                setIsLoggedIn(true)
+                setAuthUser(result.user)
+                navigate('/todos')
+            } catch (error) {
+                setErrorMessage(error.message)
+            } finally {
                 setIsSigningIn(false)
-            })
+            }
         }
     }
 
@@ -70,6 +88,7 @@ export function Login() {
                         type="submit" 
                         className="login-button"
                         disabled={isSigningIn}
+                        onClick={onSubmit}
                     >
                         {isSigningIn ? 'Signing in...' : 'Sign In'}
                     </button>
@@ -83,6 +102,10 @@ export function Login() {
                         <img src={google_logo} alt="" className='google-icon'/>
                         Sign in with Google
                     </button>
+
+                    <h6 className='registerLink'>
+                        Don't Have an Account? <Link to="/register">Register</Link>
+                    </h6>
                 </form>
             </div>
         </div>
