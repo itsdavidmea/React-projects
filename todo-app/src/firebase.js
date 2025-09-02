@@ -1,8 +1,9 @@
 //authentification of users 
 
-import {initializeApp} from 'firebase/app'
-import { getAuth } from "firebase/auth";
-
+import { initializeApp } from 'firebase/app'
+import { getAuth } from "firebase/auth"
+import { getAnalytics } from "firebase/analytics"
+import { getFirestore } from "firebase/firestore"
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -26,4 +27,4 @@ const auth = getAuth(app)
 // Initialize Cloud Firestore and get a reference to the service
 export const db = getFirestore(app);
 
-export {app, auth};
+export {app, auth, analytics};

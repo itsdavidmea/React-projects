@@ -1,52 +1,75 @@
-import React, {useState, useEffect, useContext, use} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import { auth } from '../firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 
+// Create a new context for authentication
 const AuthContext = React.createContext()
 
-//custom hook that acts as a convenient "key" to access all your authentication data and functions.
+/**
+ * Custom hook to access authentication context
+ * Provides easy access to auth state and functions throughout the app
+ * @returns {Object} Authentication context value
+ */
 export function useAuth(){
     return useContext(AuthContext)
 }
-//makes data available to all components in your app.
+
+/**
+ * AuthProvider component that wraps the app to provide authentication context
+ * @param {Object} props - Component props (including children)
+ */
 export function AuthProvider(props) {
-    const [currentUser, setCurrentUser] = useState(nll)
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
-    const [loading, setLoading] = useState(true)
-    const [authUser, setAuthUser] = useState(null)
+    // State management for authentication
+    const [currentUser, setCurrentUser] = useState(null)         // Stores current user data
+    const [isLoggedIn, setIsLoggedIn] = useState(false)        // Tracks login status
+    const [loading, setLoading] = useState(true)               // Tracks initial auth loading state
+   
     
-    // we would like to listen to the events when user logs in and logs out 
+    /**
+     * Effect hook to handle Firebase authentication state changes
+     * Sets up listener for auth state changes and cleanup on unmount
+     */
     useEffect(() => {
+        // Subscribe to auth state changes
         const unsubscribe = onAuthStateChanged(auth, initializeUser)
+        // Cleanup subscription on unmount
         return unsubscribe
     }, [])
 
+    /**
+     * Initializes user state when auth state changes
+     * @param {Object} user - Firebase user object
+     */
     async function initializeUser(user) {
         if (user) {
+            // User is signed in
             setCurrentUser({...user})
             setIsLoggedIn(true)
         } else {
+            // User is signed out
             setCurrentUser(null)
             setIsLoggedIn(false)
         }
-        setLoading(false) // Done loading - we now know the auth state
+        // Mark authentication loading as complete
+        setLoading(false)
     }
 
-
-    // The "broadcast package" - everything we want to share
+    // Create value object with all context data
     const value = {
-        currentUser,
-        setCurrentUser,
-        loading, 
-      
-        isLoggedIn, 
-        setIsLoggedIn
+        currentUser,      // Current user object
+        setCurrentUser,   // Function to update current user
+        loading,         // Loading state
+        isLoggedIn,      // Login status
+        setIsLoggedIn    // Function to update login status
     }
 
     return (
-        //value is props 
-        <AuthContext.Provider value={value}>{!loading && props.children}</AuthContext.Provider> // only show children when done loading, the loading has to be false 
+        <AuthContext.Provider value={value}>
+            {/* Only render children when initial auth state is determined */}
+            {!loading && props.children}
+        </AuthContext.Provider>
     )
 }
 
+// Export the context for direct usage if needed
 export default AuthContext

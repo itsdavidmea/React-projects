@@ -27,3 +27,5 @@ export const doPasswordReset = (email) => {
 export const doPasswordChange = (email) => {
     return updatePassword(auth.currentUser, password)
 }
+
+

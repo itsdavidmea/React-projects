@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { AuthProvider, useAuth } from './contexts/AuthContext' // Remove useAuth from here
 
+
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './index.css'
@@ -100,7 +101,7 @@ function AppContent({ todos, selectedTab, setSelectedTab, handleAddTodo, handleD
             handleDeleteTodo={handleDeleteTodo} 
             handleCompleteTodo={handleCompleteTodo} 
           />
-          <Login />
+         
         </>
       ) : (
         <Login />

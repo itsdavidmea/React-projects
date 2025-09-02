@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
-import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../../auth';
+import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../../auth'
+import './Login.css' // Add this import
+import google_logo from '../../assets/google_logo.svg'
 
 
 export function Login() {
@@ -28,40 +30,63 @@ export function Login() {
         }
     }
 
-    // Clean functions without event handling
-    const handleLogin = () => {
-        setIsLoggedIn(true);
-        setAuthUser({ Name: 'John Doe' });
-    }
 
-    const handleLogout = () => {
-        setIsLoggedIn(false);
-        setAuthUser(null);
-    }
 
     return (
-        <>
-            <span>
-                User is currently: {isLoggedIn ? 'logged in' : 'logged out'}
-            </span>
+        <div className="login-container">
+            <div className="login-box">
+                <h2>Welcome Back</h2>
+                
+                {errorMessage && (
+                    <div className="error-message">
+                        {errorMessage}
+                    </div>
+                )}
 
-            {isLoggedIn ? (
-                <span>User Name: {authUser?.Name}</span>
-            ) : null}
+                <form onSubmit={onSubmit} className="login-form">
+                    <div className="form-group">
+                        <label htmlFor="email">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
 
-            <br />
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
 
-            {isLoggedIn ? (
-                <button onClick={handleLogout}>
-                    Log Out
-                </button>
-            ) : (
-                <button onClick={handleLogin}>
-                    Log In
-                </button>
-            )}
-        </>
-    );
+                    <button 
+                        type="submit" 
+                        className="login-button"
+                        disabled={isSigningIn}
+                    >
+                        {isSigningIn ? 'Signing in...' : 'Sign In'}
+                    </button>
+
+                    <button 
+                        type="button"
+                        onClick={onGoogleSignIn}
+                        className="google-button"
+                        disabled={isSigningIn}
+                    >
+                        <img src={google_logo} alt="" />
+                        Sign in with Google
+                    </button>
+                </form>
+            </div>
+        </div>
+    )
 }
 
 export default Login
