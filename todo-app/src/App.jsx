@@ -1,5 +1,7 @@
 // App.jsx: Main React component for your application. Handles UI and state logic for the counter demo.
 import { useState, useEffect } from 'react'
+import { AuthProvider, useAuth } from './contexts/AuthContext' // Remove useAuth from here
+
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './index.css'
@@ -10,16 +12,13 @@ import { Tabs } from './components/Tabs'
 import { TodoCard } from './components/TodoCard'
 import { TodoInput } from './components/TodoInput'
 import { TodoList } from './components/TodoList'
+import { Login } from './components/Auth/Login'
+
 
 
 function App() {
-
-  // const todos = [
-  //   { input: 'Hello! Add your first todo!', complete: true },
-  //   { input: 'Get the groceries!', complete: false },
-  //   { input: 'Learn how to web design', complete: false },
-  //   { input: 'Say hi to gran gran', complete: true },
-  // ]
+  // Remove this line as it won't work here
+  // const { isLoggedIn } = useAuth() 
 
   const [todos, setTodos] = useState([
     { input: 'Hello! Add your first todo!', complete: true }
@@ -52,7 +51,7 @@ function App() {
   }
 
   function handleSaveData(currTodos) {
-    localStorage.setItem('todo-app', JSON.stringify({todos: currTodos}))
+    localStorage.setItem('todo-app', JSON.stringify({ todos: currTodos }))
   }
 
 
@@ -66,18 +65,48 @@ function App() {
   }, [])
 
   return (
-    <>
-      <Header todos={todos} />
-      <Tabs
-        todos={todos} // The array of todo items, used to display counts or filter todos by tab
-        selectedTab={selectedTab} // The currently selected tab (e.g., 'Open', 'Completed', etc.)
-        setSelectedTab={setSelectedTab} // Function to update the selected tab when the user clicks a tab
+    <AuthProvider>
+      
+      <AppContent 
+        todos={todos}
+        selectedTab={selectedTab}
+        setSelectedTab={setSelectedTab}
+        handleAddTodo={handleAddTodo}
+        handleDeleteTodo={handleDeleteTodo}
+        handleCompleteTodo={handleCompleteTodo}
       />
-      <TodoInput todos={todos} handleAddTodo={handleAddTodo} />
-      <TodoList todos={todos} selectedTab={selectedTab} handleDeleteTodo={handleDeleteTodo} handleCompleteTodo={handleCompleteTodo} />
+    </AuthProvider>
+  )
+}
+// we do it like this because authProvider context can only be used with its children 
+// Create a new component to use the context
+function AppContent({ todos, selectedTab, setSelectedTab, handleAddTodo, handleDeleteTodo, handleCompleteTodo }) {
+  const { isLoggedIn } = useAuth() // Move useAuth here
+
+  return (
+    <>
+      {isLoggedIn ? (
+        <>
+          <Header todos={todos} />
+          <Tabs
+            todos={todos}
+            selectedTab={selectedTab}
+            setSelectedTab={setSelectedTab}
+          />
+          <TodoInput todos={todos} handleAddTodo={handleAddTodo} />
+          <TodoList 
+            todos={todos} 
+            selectedTab={selectedTab} 
+            handleDeleteTodo={handleDeleteTodo} 
+            handleCompleteTodo={handleCompleteTodo} 
+          />
+          <Login />
+        </>
+      ) : (
+        <Login />
+      )}
     </>
   )
-
 }
 
 export default App
